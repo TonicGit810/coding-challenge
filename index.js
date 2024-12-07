@@ -17,7 +17,7 @@ function calculateRevenue(ledgerData) {
     return formatWithCommas(finalRevenue); // Format with commas
 }
 
-// Calculate total value for 'expense' accounts and truncate the final result
+// Calculate total value for expense accounts
 function calculateExpenses(ledgerData) {
     const totalExpenses = ledgerData.data
       .filter(account => account.account_category === 'expense')
@@ -28,7 +28,7 @@ function calculateExpenses(ledgerData) {
     return formatWithCommas(finalExpenses); // Format with commas
   }
 
-  
+
 const expenses = calculateExpenses(ledgerData);
 const revenue = calculateRevenue(ledgerData);
 console.log(`Revenue: $${revenue}`);
