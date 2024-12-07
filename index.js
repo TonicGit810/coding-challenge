@@ -17,5 +17,19 @@ function calculateRevenue(ledgerData) {
     return formatWithCommas(finalRevenue); // Format with commas
 }
 
+// Calculate total value for 'expense' accounts and truncate the final result
+function calculateExpenses(ledgerData) {
+    const totalExpenses = ledgerData.data
+      .filter(account => account.account_category === 'expense')
+      .reduce((sum, account) => sum + account.total_value, 0);
+    
+    const finalExpenses = Math.floor(totalExpenses); // Remove cents from the final total value
+  
+    return formatWithCommas(finalExpenses); // Format with commas
+  }
+
+  
+const expenses = calculateExpenses(ledgerData);
 const revenue = calculateRevenue(ledgerData);
 console.log(`Revenue: $${revenue}`);
+console.log(`Expenses: $${expenses}`);
