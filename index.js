@@ -45,13 +45,66 @@ function calculateNetProfitMargin(revenue, expenses) {
     return ((revenue - expenses) / revenue) * 100 // Return percentage
 }
 
+// Calculate total assets
+function calculateAssets(ledgerData) {
+    const totalAssetDebit = ledgerData.data
+        .filter(account => 
+            account.account_category === 'assets' &&
+            account.value_type === 'debit' &&
+            ['current', 'bank', 'current_accounts_receivable'].includes(account.account_type)
+        )
+        .reduce((sum, account) => sum + account.total_value, 0);
+
+    const totalAssetsCredit = ledgerData.data
+        .filter(account => 
+            account.account_category === 'assets' &&
+            account.value_type === 'credit' &&
+            ['current', 'bank', 'current_accounts_receivable'].includes(account.account_type)
+        )
+        .reduce((sum, account) => sum + account.total_value, 0);
+
+    return totalAssetDebit - totalAssetsCredit; 
+}
+
+// Calculate total liabilities
+function calculateLiabilities(ledgerData) {
+    const totalLiabilitiesCredit = ledgerData.data
+        .filter(account => 
+            account.account_category === 'liability' &&
+            account.value_type === 'credit' &&
+            ['current', 'current_accounts_payable'].includes(account.account_type)
+        )
+        .reduce((sum, account) => sum + account.total_value, 0);
+
+    const totalLiabilitiesDebit = ledgerData.data
+        .filter(account => 
+            account.account_category === 'liability' &&
+            account.value_type === 'debit' &&
+            ['current', 'current_accounts_payable'].includes(account.account_type)
+        )
+        .reduce((sum, account) => sum + account.total_value, 0);
+
+    return totalLiabilitiesCredit - totalLiabilitiesDebit;
+}
+
+// Calculate Working Capital Ratio
+function calculateWorkingCapitalRatio(assets, liabilities) {
+    return (assets / liabilities) * 100; 
+}
+
+
 
 const revenue = calculateRevenue(ledgerData); 
 const expenses = calculateExpenses(ledgerData);
 const grossProfitMargin = calculateGrossProfitMargin(ledgerData, revenue);
 const netProfitMargin = calculateNetProfitMargin(revenue, expenses);
+const assets = calculateAssets(ledgerData);
+const liabilities = calculateLiabilities(ledgerData);
+const workingCapitalRatio = calculateWorkingCapitalRatio(assets, liabilities);
+
 
 console.log(`Revenue: $${formatWithCommas(revenue)}`);
 console.log(`Expenses: $${formatWithCommas(expenses)}`);
 console.log(`Gross Profit Margin: %${grossProfitMargin.toFixed(1)}`);
 console.log(`Net Profit Margin: %${netProfitMargin.toFixed(1)}`);
+console.log(`Working Capital Ratio: %${workingCapitalRatio.toFixed(1)}`);
