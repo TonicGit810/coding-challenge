@@ -108,3 +108,14 @@ console.log(`Expenses: $${formatWithCommas(expenses)}`);
 console.log(`Gross Profit Margin: %${grossProfitMargin.toFixed(1)}`);
 console.log(`Net Profit Margin: %${netProfitMargin.toFixed(1)}`);
 console.log(`Working Capital Ratio: %${workingCapitalRatio.toFixed(1)}`);
+
+
+module.exports = {
+    calculateRevenue,
+    calculateExpenses,
+    calculateGrossProfitMargin,
+    calculateNetProfitMargin,
+    calculateAssets,
+    calculateLiabilities,
+    calculateWorkingCapitalRatio
+};
