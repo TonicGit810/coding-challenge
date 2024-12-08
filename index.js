@@ -6,7 +6,7 @@ function formatWithCommas(number) {
     return number.toLocaleString();
 }
 
-//Calculate total value for revenue accounts
+// Calculate total value for revenue accounts
 function calculateRevenue(ledgerData) {
     const totalRevenue = ledgerData.data
       .filter(account => account.account_category === 'revenue')
@@ -14,7 +14,7 @@ function calculateRevenue(ledgerData) {
     
     const finalRevenue = Math.floor(totalRevenue); // Remove cents from the final total value
   
-    return formatWithCommas(finalRevenue); // Format with commas
+    return finalRevenue;
 }
 
 // Calculate total value for expense accounts
@@ -25,11 +25,33 @@ function calculateExpenses(ledgerData) {
     
     const finalExpenses = Math.floor(totalExpenses); // Remove cents from the final total value
   
-    return formatWithCommas(finalExpenses); // Format with commas
+    return finalExpenses; 
   }
 
 
+// Calculate Gross Profit Margin
+function calculateGrossProfitMargin(ledgerData, revenue) {
+
+    const totalDebit = ledgerData.data
+        .filter(account => account.account_type === 'sales' && account.value_type === 'debit')
+        .reduce((sum, account) => sum + account.total_value, 0);
+
+    return (totalDebit / revenue) * 100; // Return percentage
+    
+}
+
+// Calculate Net Profit Margin
+function calculateNetProfitMargin(revenue, expenses) {
+    return ((revenue - expenses) / revenue) * 100 // Return percentage
+}
+
+
+const revenue = calculateRevenue(ledgerData); 
 const expenses = calculateExpenses(ledgerData);
-const revenue = calculateRevenue(ledgerData);
-console.log(`Revenue: $${revenue}`);
-console.log(`Expenses: $${expenses}`);
+const grossProfitMargin = calculateGrossProfitMargin(ledgerData, revenue);
+const netProfitMargin = calculateNetProfitMargin(revenue, expenses);
+
+console.log(`Revenue: $${formatWithCommas(revenue)}`);
+console.log(`Expenses: $${formatWithCommas(expenses)}`);
+console.log(`Gross Profit Margin: %${grossProfitMargin.toFixed(1)}`);
+console.log(`Net Profit Margin: %${netProfitMargin.toFixed(1)}`);
